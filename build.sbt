@@ -1,2 +1,6 @@
-name := "rock-paper-scissor"
-scalaVersion := "2.12.2"
+ThisBuild / scalaVersion     := "2.12.11"
+
+lazy val root = (project in file("."))
+  .settings(
+    name := "rps"
+  )
