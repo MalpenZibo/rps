@@ -26,12 +26,10 @@ object Game {
 
     println(s"Your move ${moves(userMove)}, Computer move ${moves(enemyMove)}")
 
-    if (userMove == enemyMove) {
-      println("even")
-    } else if (moves((enemyMove + 1) % 3) == moves(userMove)) {
-      println("you win")
-    } else {
-      println("you lose")
+    (userMove, enemyMove) match {
+      case (x, y) if x == y => println("It's a draw")
+      case (x, y) if moves((enemyMove + 1) % 3) == moves(userMove) => println("you win")
+      case _ => println("you lose")
     }
   }
 }
