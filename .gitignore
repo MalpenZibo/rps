@@ -22,3 +22,4 @@ project/plugins/project/
 .bloop
 .metals
 project
+client/node_modules
