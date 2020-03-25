@@ -1,4 +1,4 @@
-package rps
+package rps.services
 
 import scala.util.Random
 
@@ -7,7 +7,7 @@ import rps.models._
 import rps.models.Result._
 import rps.models.Move._
 
-object Game {
+object GameService {
   def play(userMove: Move): (Move, Move, Result) = {
     val enemyMove = getRandomMove
     val result = getResult(userMove, enemyMove)

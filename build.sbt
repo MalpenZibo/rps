@@ -7,6 +7,8 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       "io.buildo" %% "enumero" % "1.2.1",
       "io.buildo" %% "enumero-circe-support" % "1.2.1",
+      "io.buildo" %% "wiro-http-server" % "0.8.1",
+      "org.slf4j" % "slf4j-nop" % "1.6.4",
       "com.typesafe.akka" %% "akka-http" % "10.0.10",
       "de.heikoseeberger" %% "akka-http-circe" % "1.18.0",
       "io.circe" %% "circe-core" % "0.8.0",
