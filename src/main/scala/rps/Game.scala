@@ -15,17 +15,15 @@ object Game {
 
         println(s"Your move $userMove, Computer move $enemyMove")
 
-        if (userMove == enemyMove) {
-          println("even")
-        } else if (((enemyMove + 1) % 3) == userMove) {
-          println("you win")
-        } else {
-         println("you lose")
+        (userMove, enemyMove) match {
+          case (x, y) if x == y => println("it's a draw")
+          case (x, y) if ((enemyMove + 1) % 3) == userMove => println("you win")
+          case _ => println("you lose")
         }
       }
       case _ => {
         println("wrong selection")
       }
-    }    
+    }
   }
 }
