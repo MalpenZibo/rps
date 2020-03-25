@@ -1,31 +1,24 @@
 package rps
 
 import scala.util.Random
-import scala.util.Try
-import scala.util.Success
-import scala.util.Failure
-import rps.Move.Scissors
-import rps.Move.Rock
-import rps.Move.Paper
 
 import io.buildo.enumero.{CaseEnumIndex, CaseEnumSerialization}
+import rps.models._
+import rps.models.Result._
+import rps.models.Move._
 
 object Game {
-  def play(): Unit = {
-    CaseEnumIndex[Move].caseFromIndex(readLine("make your move (0: rock, 1: paper, 2: scissors) ")) match {
-      case Some(userMove) => {
-        val enemyMove = getRandomMove
-
-        println(s"Your move ${CaseEnumSerialization[Move].caseToString(userMove)}, Computer move ${CaseEnumSerialization[Move].caseToString(enemyMove)}")
-
-        (userMove, enemyMove) match {
-          case (x, y) if x == y => println("It's a draw")
-          case (Rock, Scissors) | (Paper, Rock) | (Scissors, Paper) => println("you win")
-          case _ => println("you lose")
-        }
+  def play(userMove: Move): (Move, Move, Result) = {
+    val enemyMove = getRandomMove
+    (
+      userMove, 
+      enemyMove, 
+      (userMove, enemyMove) match {
+        case (x, y) if x == y => Draw
+        case (Rock, Scissors) | (Paper, Rock) | (Scissors, Paper) => Win
+        case _ => Lose
       }
-      case None => println("wrong selection")
-    }
+    )
   }
 
   private def getRandomMove(): Move =
