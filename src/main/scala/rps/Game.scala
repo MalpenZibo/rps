@@ -15,7 +15,7 @@ object Game {
     (userMove, enemyMove, result)
   }
 
-  private def getResult(userMove: Move, enemyMove: Move) = 
+  private def getResult(userMove: Move, enemyMove: Move): Result = 
     (userMove, enemyMove) match {
       case (x, y) if x == y => Draw
       case (Rock, Scissors) | (Paper, Rock) | (Scissors, Paper) => Win
