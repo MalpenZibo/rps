@@ -4,26 +4,28 @@ import scala.util.Random
 import scala.util.Try
 import scala.util.Success
 import scala.util.Failure
+import rps.Move.Scissors
+import rps.Move.Rock
+import rps.Move.Paper
 
 object Game {
   def play(): Unit = {
-    val rnd = Random
+    Move.read(readLine("make your move (0: rock, 1: paper, 2: scissors) ")) match {
+      case Some(userMove) => {
+        val enemyMove = getRandomMove
 
-    Try(readLine("make your move (0: rock, 1: paper, 2: scissors) ").toInt) match {
-      case Success(userMove) => {
-        val enemyMove = rnd.nextInt(3)
-
-        println(s"Your move $userMove, Computer move $enemyMove")
+        println(s"Your move ${Move.print(userMove)}, Computer move ${Move.print(enemyMove)}")
 
         (userMove, enemyMove) match {
-          case (x, y) if x == y => println("it's a draw")
-          case (x, y) if ((enemyMove + 1) % 3) == userMove => println("you win")
+          case (x, y) if x == y => println("It's a draw")
+          case (Rock, Scissors) | (Paper, Rock) | (Scissors, Paper) => println("you win")
           case _ => println("you lose")
         }
       }
-      case _ => {
-        println("wrong selection")
-      }
+      case None => println("wrong selection")
     }
   }
+
+  private def getRandomMove(): Move =
+    Random.shuffle(List(Rock, Paper, Scissors)).head
 }
