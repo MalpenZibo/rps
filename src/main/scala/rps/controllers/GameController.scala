@@ -1,5 +1,6 @@
 package rps.controllers
 
+import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import wiro.annotation._
 
@@ -13,9 +14,7 @@ trait GameController {
   def play(userMove: Move): Future[Either[Throwable, GameResponse]]
 }
 
-class GameControllerImpl() extends GameController {
-  import scala.concurrent.ExecutionContext.Implicits.global
-
+class GameControllerImpl(implicit ec: ExecutionContext) extends GameController {
   override def play(userMove: Move): Future[Either[Throwable, GameResponse]] = 
     Future(Right(GameResponse.tupled(GameService.play(userMove))))
 }
