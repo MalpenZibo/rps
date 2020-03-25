@@ -6,30 +6,24 @@ import scala.util.Success
 import scala.util.Failure
 
 object Game {
-  private val moves = Array("rock", "paper", "scissors")
-
   def play(): Unit = {
     val rnd = Random
 
-    var input = readLine("make your move (0: rock, 1: paper, 2: scissors) ")
+    Try(readLine("make your move (0: rock, 1: paper, 2: scissors) ").toInt) match {
+      case Success(userMove) => {
+        val enemyMove = rnd.nextInt(3)
 
-    val userMove = Try(input.toInt) match {
-      case Success(decoded) if (decoded >= 0 && decoded < 3) => {
-        decoded
+        println(s"Your move $userMove, Computer move $enemyMove")
+
+        (userMove, enemyMove) match {
+          case (x, y) if x == y => println("it's a draw")
+          case (x, y) if ((enemyMove + 1) % 3) == userMove => println("you win")
+          case _ => println("you lose")
+        }
       }
       case _ => {
         println("wrong selection")
-        return
       }
-    }
-    val enemyMove = rnd.nextInt(3)
-
-    println(s"Your move ${moves(userMove)}, Computer move ${moves(enemyMove)}")
-
-    (userMove, enemyMove) match {
-      case (x, y) if x == y => println("It's a draw")
-      case (x, y) if moves((enemyMove + 1) % 3) == moves(userMove) => println("you win")
-      case _ => println("you lose")
     }
   }
 }
