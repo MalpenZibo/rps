@@ -7,12 +7,24 @@ import rps.models._
 import rps.models.Result._
 import rps.models.Move._
 
-object GameService {
-  def play(userMove: Move): (Move, Move, Result) = {
+import rps.services._
+import rps.repositories.GameRepository
+
+trait GameService {
+  def getGameResult(): Option[GameResult]
+  def playMove(move: Move): Unit
+}
+
+class GameServiceImpl(gameRepository: GameRepository) extends GameService {
+  def getGameResult(): Option[GameResult] = gameRepository.getGame
+  
+  def playMove(userMove: Move): Unit = {
     val enemyMove = getRandomMove
     val result = getResult(userMove, enemyMove)
 
-    (userMove, enemyMove, result)
+    gameRepository.saveGame(
+      GameResult(userMove, enemyMove, result)
+    )
   }
 
   private def getResult(userMove: Move, enemyMove: Move): Result = 
@@ -20,7 +32,7 @@ object GameService {
       case (x, y) if x == y => Draw
       case (Rock, Scissors) | (Paper, Rock) | (Scissors, Paper) => Win
       case _ => Lose
-    }
+  }
 
   private def getRandomMove(): Move =
     Random.shuffle(List(Rock, Paper, Scissors)).head
