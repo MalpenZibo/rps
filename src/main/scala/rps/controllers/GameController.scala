@@ -17,12 +17,7 @@ trait GameController {
 
 class GameControllerImpl(gameService: GameService)(implicit ec: ExecutionContext) extends GameController {
   override def result(): Future[Either[NotFoundError, GameResult]] = 
-    Future(
-      gameService.getGameResult match {
-        case Some(game) => Right(game)
-        case None => Left(new NotFoundError("game not found"))
-      }
-    )
+    Future(gameService.getGameResult.toRight(NotFoundError("game not found")))
 
   override def play(userMove: Move): Future[Either[Throwable, Unit]] =
     Future(Right(gameService.playMove(userMove)))

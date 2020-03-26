@@ -23,13 +23,7 @@ class GameServiceImpl(gameRepository: GameRepository) extends GameService {
     val result = getResult(userMove, enemyMove)
 
     gameRepository.saveGame(
-      GameResult.tupled(
-        (
-          userMove, 
-          enemyMove, 
-          result
-        )
-      )
+      GameResult(userMove, enemyMove, result)
     )
   }
 
