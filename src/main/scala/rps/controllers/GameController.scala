@@ -1,5 +1,7 @@
 package rps.controllers
 
+import java.util.UUID
+
 import scala.concurrent.{ExecutionContext, Future}
 import wiro.annotation._
 
@@ -9,16 +11,14 @@ import rps.models._
 @path("rps")
 trait GameController {
   @query
-  def result(): Future[Either[NotFoundError, GameResult]]
+  def result(): Future[Either[ApiError, Game]]
 
   @command
-  def play(userMove: Move): Future[Either[Throwable, Unit]]
+  def play(userMove: Move): Future[Either[ApiError, UUID]]
 }
 
 class GameControllerImpl(gameService: GameService)(implicit ec: ExecutionContext) extends GameController {
-  override def result(): Future[Either[NotFoundError, GameResult]] = 
-    Future(gameService.getGameResult.toRight(NotFoundError("game not found")))
+  override def result(): Future[Either[ApiError, Game]] = gameService.getGameResult
 
-  override def play(userMove: Move): Future[Either[Throwable, Unit]] =
-    Future(Right(gameService.playMove(userMove)))
+  override def play(userMove: Move): Future[Either[ApiError, UUID]] = gameService.playMove(userMove)
 }
