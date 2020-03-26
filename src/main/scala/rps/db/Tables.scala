@@ -3,10 +3,20 @@ package rps.db
 import slick.driver.H2Driver.api._
 import java.sql.Timestamp
 import slick.sql.SqlProfile.ColumnOption.SqlType
+import java.util.UUID
+import rps.models._
 
 object Tables {
+  case class GameRow(
+    id: UUID,
+    userMove: String, 
+    computerMove: String, 
+    result: String,
+    createdAt: Timestamp
+  )
+
   class Game(tag: Tag)
-    extends Table[(java.util.UUID, String, String, String, Timestamp)](tag, "GAME") {
+    extends Table[GameRow](tag, "GAME") {
   
     def id = column[java.util.UUID]("GAME_ID", O.PrimaryKey)
     def userMove = column[String]("USER_MOVE")
@@ -14,7 +24,7 @@ object Tables {
     def result = column[String]("RESULT")
     def createdAt = column[Timestamp]("CREATED_AT")
     
-    def * = (id, userMove, computerMove, result, createdAt)
+    def * = (id, userMove, computerMove, result, createdAt) <> (GameRow.tupled, GameRow.unapply)
   }
   
   lazy val Games = new TableQuery(tag => new Game(tag))

@@ -1,7 +1,8 @@
 package rps.services
 
 import java.util.UUID
-import java.sql.Timestamp
+import java.time.Instant
+
 import scala.concurrent.Future
 import scala.util.Random
 
@@ -26,9 +27,7 @@ class GameServiceImpl(gameRepository: GameRepository) extends GameService {
     val computerMove = getRandomMove
     val result = getResult(userMove, computerMove)
 
-    return gameRepository.saveGame(
-      userMove, computerMove, result
-    )
+    return gameRepository.saveGame(Game(UUID.randomUUID, userMove, computerMove, result, Instant.now()))
   }
 
   private def getResult(userMove: Move, computerMove: Move): Result = 
