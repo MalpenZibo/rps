@@ -20,19 +20,24 @@ class GameServiceImpl(gameRepository: GameRepository) extends GameService {
   
   def playMove(userMove: Move): Unit = {
     val enemyMove = getRandomMove
+    val result = getResult(userMove, enemyMove)
+
     gameRepository.saveGame(
       GameResult.tupled(
         (
           userMove, 
           enemyMove, 
-          (userMove, enemyMove) match {
-            case (x, y) if x == y => Draw
-            case (Rock, Scissors) | (Paper, Rock) | (Scissors, Paper) => Win
-            case _ => Lose
-          }
+          result
         )
       )
     )
+  }
+
+  private def getResult(userMove: Move, enemyMove: Move): Result = 
+    (userMove, enemyMove) match {
+      case (x, y) if x == y => Draw
+      case (Rock, Scissors) | (Paper, Rock) | (Scissors, Paper) => Win
+      case _ => Lose
   }
 
   private def getRandomMove(): Move =

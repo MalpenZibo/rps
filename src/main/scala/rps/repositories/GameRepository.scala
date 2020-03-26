@@ -14,8 +14,6 @@ class GameRepositoryImpl extends GameRepository {
 
   def getGame(): Option[GameResult] = gameStore.get()
 
-  def saveGame(game: GameResult): Unit = {
-    println(game)
-    gameStore.set(Some(game))
-  }
+  def saveGame(game: GameResult): Unit = 
+    gameStore.set(Some(game))  
 }

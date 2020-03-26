@@ -11,6 +11,7 @@ import wiro.Config
 import wiro.server.akkaHttp._
 import wiro.server.akkaHttp.FailSupport._
 
+import rps.models.Errors._
 import rps.controllers._
 import rps.services._
 import rps.repositories._
@@ -20,13 +21,6 @@ object Main extends App with RouterDerivationModule {
   implicit val materializer = ActorMaterializer()
   // needed for the future flatMap/onComplete in the end
   implicit val executionContext = system.dispatcher
-
-  implicit def throwableResponse: ToHttpResponse[Throwable] = { exc =>
-    HttpResponse(
-      status = StatusCodes.InternalServerError,
-      entity = exc.toString
-    )
-  }
 
   val gameRepository = new GameRepositoryImpl()
   val gameService = new GameServiceImpl(gameRepository)
