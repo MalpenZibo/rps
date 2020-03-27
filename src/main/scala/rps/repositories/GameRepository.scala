@@ -24,13 +24,13 @@ class GameRepositoryImpl(
   def getGame(): Future[Either[ApiError, Option[Game]]] = { 
     val game = db.run(Games.sortBy(_.createdAt.desc).take(1).result.headOption).map(_.flatMap(convertGameRow))
 
-    return futureToEither(game)
+    futureToEither(game)
   } 
 
   def saveGame(game: Game): Future[Either[ApiError, UUID]] = {
     val newGame = Games += convertGame(game)
     
-    return futureToEither(db.run(newGame).map(_ => game.id))
+    futureToEither(db.run(newGame).map(_ => game.id))
   }
 
   private val convertGameRow = (r: GameRow) => for {

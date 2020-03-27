@@ -18,7 +18,7 @@ trait GameController {
 }
 
 class GameControllerImpl(gameService: GameService)(implicit ec: ExecutionContext) extends GameController {
-  override def result(): Future[Either[ApiError, Game]] = gameService.getGameResult
+  override def result(): Future[Either[ApiError, Game]] = ApiErrors.someOrNotFound(gameService.getGameResult)
 
   override def play(userMove: Move): Future[Either[ApiError, UUID]] = gameService.playMove(userMove)
 }

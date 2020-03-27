@@ -8,9 +8,9 @@ import scala.concurrent.ExecutionContext
 
 object AppDbContext {
 
-  def getDBRef(config_key: String)(implicit ec: ExecutionContext): Future[DatabaseDef] = {
-    val db = Database.forConfig(config_key)  
-    return db.run((Tables.Games.schema).create).map(_ => db)
-  }
+  def getDBRef(config_key: String)(implicit ec: ExecutionContext): DatabaseDef = 
+    Database.forConfig(config_key)  
 
+  def createSchema(db: DatabaseDef): Future[Unit] =
+    db.run((Tables.Games.schema).create)
 }

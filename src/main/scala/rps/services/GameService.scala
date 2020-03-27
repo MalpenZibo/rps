@@ -5,7 +5,6 @@ import java.time.Instant
 
 import scala.concurrent.Future
 import scala.util.Random
-import scala.concurrent.ExecutionContext
 
 import rps.models._
 import rps.models.Result._
@@ -14,20 +13,18 @@ import rps.models.Move._
 import rps.repositories.GameRepository
 
 trait GameService {
-  def getGameResult(): Future[Either[ApiError, Game]]
+  def getGameResult(): Future[Either[ApiError, Option[Game]]]
   def playMove(move: Move): Future[Either[ApiError, UUID]]
 }
 
-class GameServiceImpl(gameRepository: GameRepository)(
-  implicit ec: ExecutionContext
-) extends GameService {
-  def getGameResult(): Future[Either[ApiError, Game]] = ApiErrors.someOrNotFound(gameRepository.getGame)
+class GameServiceImpl(gameRepository: GameRepository) extends GameService {
+  def getGameResult(): Future[Either[ApiError, Option[Game]]] = gameRepository.getGame
   
   def playMove(userMove: Move): Future[Either[ApiError, UUID]] = {
     val computerMove = getRandomMove
     val result = getResult(userMove, computerMove)
 
-    return gameRepository.saveGame(Game(UUID.randomUUID, userMove, computerMove, result, Instant.now()))
+    gameRepository.saveGame(Game(UUID.randomUUID, userMove, computerMove, result, Instant.now()))
   }
 
   private def getResult(userMove: Move, computerMove: Move): Result = 

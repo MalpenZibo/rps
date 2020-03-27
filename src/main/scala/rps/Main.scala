@@ -22,7 +22,9 @@ object Main extends App with RouterDerivationModule {
   // needed for the future flatMap/onComplete in the end
   implicit val executionContext = system.dispatcher
 
-  AppDbContext.getDBRef("h2mem1").map(db => {
+  val db = AppDbContext.getDBRef("h2mem1")
+
+  AppDbContext.createSchema(db).map(_ => {
     val gameRepository = new GameRepositoryImpl(db)
     val gameService = new GameServiceImpl(gameRepository)
     val gameController = new GameControllerImpl(gameService)
