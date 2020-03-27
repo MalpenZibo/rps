@@ -1,10 +1,9 @@
 package rps.db
 
-import slick.driver.H2Driver.api._
 import java.sql.Timestamp
-import slick.sql.SqlProfile.ColumnOption.SqlType
 import java.util.UUID
-import rps.models._
+
+import slick.driver.H2Driver.api._
 
 object Tables {
   case class GameRow(
@@ -28,5 +27,4 @@ object Tables {
   }
   
   lazy val Games = new TableQuery(tag => new Game(tag))
-
 }

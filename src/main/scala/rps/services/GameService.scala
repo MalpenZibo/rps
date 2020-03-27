@@ -5,14 +5,12 @@ import java.time.Instant
 
 import scala.concurrent.Future
 import scala.util.Random
-
-import io.buildo.enumero.{CaseEnumIndex, CaseEnumSerialization}
+import scala.concurrent.ExecutionContext
 
 import rps.models._
 import rps.models.Result._
 import rps.models.Move._
 
-import rps.services._
 import rps.repositories.GameRepository
 
 trait GameService {
@@ -20,8 +18,10 @@ trait GameService {
   def playMove(move: Move): Future[Either[ApiError, UUID]]
 }
 
-class GameServiceImpl(gameRepository: GameRepository) extends GameService {
-  def getGameResult(): Future[Either[ApiError, Game]] = gameRepository.getGame
+class GameServiceImpl(gameRepository: GameRepository)(
+  implicit ec: ExecutionContext
+) extends GameService {
+  def getGameResult(): Future[Either[ApiError, Game]] = ApiErrors.someOrNotFound(gameRepository.getGame)
   
   def playMove(userMove: Move): Future[Either[ApiError, UUID]] = {
     val computerMove = getRandomMove

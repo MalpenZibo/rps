@@ -1,7 +1,6 @@
 package rps.models
 
 import java.util.UUID
-import java.sql.Timestamp
 import java.time.Instant
 
 case class Game(
