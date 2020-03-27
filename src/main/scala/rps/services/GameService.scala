@@ -1,34 +1,34 @@
 package rps.services
 
+import java.util.UUID
+import java.time.Instant
+
+import scala.concurrent.Future
 import scala.util.Random
 
-import io.buildo.enumero.{CaseEnumIndex, CaseEnumSerialization}
 import rps.models._
 import rps.models.Result._
 import rps.models.Move._
 
-import rps.services._
 import rps.repositories.GameRepository
 
 trait GameService {
-  def getGameResult(): Option[GameResult]
-  def playMove(move: Move): Unit
+  def getGameResult(): Future[Either[ApiError, Option[Game]]]
+  def playMove(move: Move): Future[Either[ApiError, UUID]]
 }
 
 class GameServiceImpl(gameRepository: GameRepository) extends GameService {
-  def getGameResult(): Option[GameResult] = gameRepository.getGame
+  def getGameResult(): Future[Either[ApiError, Option[Game]]] = gameRepository.getGame
   
-  def playMove(userMove: Move): Unit = {
-    val enemyMove = getRandomMove
-    val result = getResult(userMove, enemyMove)
+  def playMove(userMove: Move): Future[Either[ApiError, UUID]] = {
+    val computerMove = getRandomMove
+    val result = getResult(userMove, computerMove)
 
-    gameRepository.saveGame(
-      GameResult(userMove, enemyMove, result)
-    )
+    gameRepository.saveGame(Game(UUID.randomUUID, userMove, computerMove, result, Instant.now()))
   }
 
-  private def getResult(userMove: Move, enemyMove: Move): Result = 
-    (userMove, enemyMove) match {
+  private def getResult(userMove: Move, computerMove: Move): Result = 
+    (userMove, computerMove) match {
       case (x, y) if x == y => Draw
       case (Rock, Scissors) | (Paper, Rock) | (Scissors, Paper) => Win
       case _ => Lose
