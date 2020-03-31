@@ -15,9 +15,9 @@ lazy val root = (project in file("."))
       "de.heikoseeberger" %% "akka-http-circe" % "1.18.0",
       "io.circe" %% "circe-core" % "0.8.0",
       "io.circe" %% "circe-generic" % "0.8.0",  
+      "org.scalatest" %% "scalatest" % "3.1.1" % "test"
     ),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
-    addCompilerPlugin(scalafixSemanticdb), // enable SemanticDB
     scalacOptions ++= Seq(
       "-Yrangepos",          // required by SemanticDB compiler plugin
       "-Ywarn-unused-import" // required by `RemoveUnused` rule

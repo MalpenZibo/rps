@@ -17,7 +17,6 @@ object ApiErrors {
     implicit ec: ExecutionContext
   ): Future[Either[ApiError, R]] = 
     f.map(e => e.flatMap(_.toRight(NotFound())))
-    //f.map(e => e.right.flatMap(v => Either.cond(v.isDefined, v.get, NotFound())))
 
   implicit def apiError: ToHttpResponse[ApiError] =
     error =>

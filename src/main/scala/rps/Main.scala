@@ -26,7 +26,8 @@ object Main extends App with RouterDerivationModule {
 
   AppDbContext.createSchema(db).map(_ => {
     val gameRepository = new GameRepositoryImpl(db)
-    val gameService = new GameServiceImpl(gameRepository)
+    val moveGenerator = new RandomMoveGenerator()
+    val gameService = new GameServiceImpl(gameRepository, moveGenerator)
     val gameController = new GameControllerImpl(gameService)
   
     val gameRouter = deriveRouter[GameController](gameController)

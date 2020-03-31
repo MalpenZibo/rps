@@ -4,7 +4,6 @@ import java.util.UUID
 import java.time.Instant
 
 import scala.concurrent.Future
-import scala.util.Random
 
 import rps.models._
 import rps.models.Result._
@@ -17,11 +16,11 @@ trait GameService {
   def playMove(move: Move): Future[Either[ApiError, UUID]]
 }
 
-class GameServiceImpl(gameRepository: GameRepository) extends GameService {
+class GameServiceImpl(gameRepository: GameRepository, moveGenerator: MoveGenerator) extends GameService {
   def getGameResult(): Future[Either[ApiError, Option[Game]]] = gameRepository.getGame
   
   def playMove(userMove: Move): Future[Either[ApiError, UUID]] = {
-    val computerMove = getRandomMove
+    val computerMove = moveGenerator.getMove
     val result = getResult(userMove, computerMove)
 
     gameRepository.saveGame(Game(UUID.randomUUID, userMove, computerMove, result, Instant.now()))
@@ -33,7 +32,4 @@ class GameServiceImpl(gameRepository: GameRepository) extends GameService {
       case (Rock, Scissors) | (Paper, Rock) | (Scissors, Paper) => Win
       case _ => Lose
   }
-
-  private def getRandomMove(): Move =
-    Random.shuffle(List(Rock, Paper, Scissors)).head
 }
