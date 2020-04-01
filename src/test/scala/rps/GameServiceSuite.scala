@@ -49,7 +49,7 @@ class GameServiceSuite
       (for {
         gameId <- gameService.playMove(Move.Paper)
       } yield { 
-        gameId.right.value.toString should not be empty 
+        gameId.isRight shouldBe true 
       })
     }
 

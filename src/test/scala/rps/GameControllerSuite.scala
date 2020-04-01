@@ -17,11 +17,12 @@ import wiro.server.akkaHttp.RouterDerivationModule
 
 import io.buildo.enumero.circe._
 import io.circe.generic.auto._
+import io.circe.syntax._
+import de.heikoseeberger.akkahttpcirce.ErrorAccumulatingCirceSupport._ 
 
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.model._
-import akka.util.ByteString
 
 import rps.db.AppDbContext
 import rps.repositories.GameRepositoryImpl
@@ -66,44 +67,28 @@ class GameControllerSuite
     }
 
     it("should return 200 when post a move") {
-      val jsonRequest = ByteString(
-        s"""
-           |{
-           |    "userMove":"${Move.caseToString(Move.Rock)}"
-           |}
-        """.stripMargin)
+      case class Request(userMove: Move)
+      val request = Request(Move.Rock)
+      val entity = HttpEntity(MediaTypes.`application/json`, request.asJson.noSpaces)
 
-      val postRequest = HttpRequest(
-        HttpMethods.POST,
-        uri = "/rps/play",
-        entity = HttpEntity(MediaTypes.`application/json`, jsonRequest))
-
-      postRequest ~> Route.seal(route) ~> check {
+      Post("/rps/play", entity) ~> Route.seal(route) ~> check {
         status should be (StatusCodes.OK)
         responseAs[String] should not be empty
       }
     }
 
     it("should return a 200 after post a move") {
-      val jsonRequest = ByteString(
-        s"""
-           |{
-           |    "userMove":"${Move.caseToString(Move.Rock)}"
-           |}
-        """.stripMargin)
+      case class Request(userMove: Move)
+      val request = Request(Move.Rock)
+      val entity = HttpEntity(MediaTypes.`application/json`, request.asJson.noSpaces)
 
-      val postRequest = HttpRequest(
-        HttpMethods.POST,
-        uri = "/rps/play",
-        entity = HttpEntity(MediaTypes.`application/json`, jsonRequest))
-
-      postRequest ~> Route.seal(route) ~> check {
+      Post("/rps/play", entity) ~> Route.seal(route) ~> check {
         status should be (StatusCodes.OK)
         responseAs[String] should not be empty
 
         Get("/rps/result") ~> route ~> check {
           status should be (StatusCodes.OK)
-          responseAs[String] should not be empty
+          responseAs[Game].result should be (Result.Draw)
         }
       }
     }
