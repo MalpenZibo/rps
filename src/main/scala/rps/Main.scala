@@ -19,7 +19,6 @@ import rps.db.AppDbContext
 object Main extends App with RouterDerivationModule {
   implicit val system = ActorSystem("rps")
   implicit val materializer = ActorMaterializer()
-  // needed for the future flatMap/onComplete in the end
   implicit val executionContext = system.dispatcher
 
   val db = AppDbContext.getDBRef("h2mem1")

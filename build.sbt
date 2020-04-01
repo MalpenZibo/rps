@@ -11,11 +11,13 @@ lazy val root = (project in file("."))
       "com.typesafe.slick" %% "slick" % "3.3.2",
       "com.h2database" % "h2" % "1.4.187",
       "org.slf4j" % "slf4j-nop" % "1.6.4",
-      "com.typesafe.akka" %% "akka-http" % "10.0.10",
+      "com.typesafe.akka" %% "akka-http" % "10.1.11",
       "de.heikoseeberger" %% "akka-http-circe" % "1.18.0",
       "io.circe" %% "circe-core" % "0.8.0",
       "io.circe" %% "circe-generic" % "0.8.0",  
-      "org.scalatest" %% "scalatest" % "3.1.1" % "test"
+      "org.scalatest" %% "scalatest" % "3.1.1" % "test",
+      "com.typesafe.akka" %% "akka-stream-testkit" % "2.6.3",
+      "com.typesafe.akka" %% "akka-http-testkit" % "10.1.11"
     ),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
     scalacOptions ++= Seq(
