@@ -19,14 +19,14 @@ import rps.db.AppDbContext
 object Main extends App with RouterDerivationModule {
   implicit val system = ActorSystem("rps")
   implicit val materializer = ActorMaterializer()
-  // needed for the future flatMap/onComplete in the end
   implicit val executionContext = system.dispatcher
 
   val db = AppDbContext.getDBRef("h2mem1")
 
   AppDbContext.createSchema(db).map(_ => {
     val gameRepository = new GameRepositoryImpl(db)
-    val gameService = new GameServiceImpl(gameRepository)
+    val moveGenerator = new RandomMoveGenerator()
+    val gameService = new GameServiceImpl(gameRepository, moveGenerator)
     val gameController = new GameControllerImpl(gameService)
   
     val gameRouter = deriveRouter[GameController](gameController)

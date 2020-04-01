@@ -13,4 +13,7 @@ object AppDbContext {
 
   def createSchema(db: DatabaseDef): Future[Unit] =
     db.run((Tables.Games.schema).create)
+
+  def dropSchema(db: DatabaseDef): Future[Unit] =
+    db.run((Tables.Games.schema).dropIfExists)
 }
