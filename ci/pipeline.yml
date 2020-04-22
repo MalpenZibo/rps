@@ -6,6 +6,7 @@ resources:
       branch: master
       uri: git@github.com:MalpenZibo/rps.git
       private_key: ((repo-key))
+      depth: 1
 
 jobs:
   - name: test
@@ -22,6 +23,9 @@ jobs:
               tag: 8u201_2.12.11_1.3.9
           inputs:
             - name: master-branch
+          caches:
+            - path: .sbt
+            - path: .ivy2
           run:
             dir: master-branch
             path: sbt
