@@ -1,4 +1,10 @@
 ---
+resource_types:
+  - name: pull-request
+    type: docker-image
+    source:
+      repository: teliaoss/github-pr-resource
+
 resources:
   - name: master-branch
     type: git
@@ -6,9 +12,14 @@ resources:
       branch: master
       uri: git@github.com:MalpenZibo/rps.git
       private_key: ((repo-key))
+  - name: pr-branch
+    type: pull-request
+    source:
+      repository: MalpenZibo/rps
+      access_token: ((github-token))
 
 jobs:
-  - name: test
+  - name: main-test
     plan:
       - get: master-branch
         params:
@@ -35,3 +46,42 @@ jobs:
               - -Dsbt.global.base=../.sbt/1.0
               - -Dsbt.boot.directory=../.sbt/boot
               - test
+  - name: pr-test
+    plan:
+      - get: pr-branch
+        trigger: true
+        version: every
+      - put: update-status
+        resource: pr-branch
+        params:
+          path: pr-branch
+          status: pending
+      - task: sbt-test
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: buildo/scala-sbt-alpine
+              tag: 8u201_2.12.11_1.3.9
+          inputs:
+            - name: pr-branch
+          caches:
+            - path: .sbt
+            - path: .ivy2
+          run:
+            dir: pr-branch
+            path: sbt
+            args: [test]
+        on_success:
+          put: update-status
+          resource: pr-branch
+          params:
+            path: pr-branch
+            status: success
+        on_failure:
+          put: update-status
+          resource: pr-branch
+          params:
+            path: pr-branch
+            status: failure
