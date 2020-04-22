@@ -6,7 +6,8 @@ resources:
       branch: master
       uri: git@github.com:MalpenZibo/rps.git
       private_key: ((repo-key))
-      depth: 1
+      params:
+        depth: 1
 
 jobs:
   - name: test
@@ -20,7 +21,7 @@ jobs:
             type: docker-image
             source:
               repository: buildo/scala-sbt-alpine
-              tag: 8u201_2.12.11_1.3.9
+              tag: 8u201_2.12.10_1.3.7
           inputs:
             - name: master-branch
           caches:
