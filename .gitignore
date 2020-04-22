@@ -21,6 +21,6 @@ project/plugins/project/
 # End of https://www.gitignore.io/api/sbt,scala
 .bloop
 .metals
-project
 client/node_modules
 src/.DS_Store
+project/metals.sbt

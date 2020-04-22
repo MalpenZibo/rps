@@ -30,4 +30,8 @@ jobs:
           run:
             dir: master-branch
             path: sbt
-            args: [test]
+            args:
+              - -Dsbt.ivy.home=../.ivy2
+              - -Dsbt.global.base=../.sbt/1.0
+              - -Dsbt.boot.directory=../.sbt/boot
+              - test
