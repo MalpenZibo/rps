@@ -6,13 +6,13 @@ resources:
       branch: master
       uri: git@github.com:MalpenZibo/rps.git
       private_key: ((repo-key))
-      params:
-        depth: 1
 
 jobs:
   - name: test
     plan:
       - get: master-branch
+        params:
+          depth: 1
         trigger: true
       - task: sbt-test
         config:
