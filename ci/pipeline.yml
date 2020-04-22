@@ -53,22 +53,21 @@ jobs:
         resource: pr-branch
         trigger: true
         version: every
-      - put: update-status
+      - &up-settings
+        put: update-status
         resource: pr-branch
-        params:
+        params: &default-up-params
           path: root
           status: pending
       - task: sbt-test
         config: *test-config
         on_success:
-          put: update-status
-          resource: pr-branch
+          <<: *up-settings
           params:
-            path: pr-branch
+            <<: *default-up-params
             status: success
         on_failure:
-          put: update-status
-          resource: pr-branch
+          <<: *up-settings
           params:
-            path: pr-branch
+            <<: *default-up-params
             status: failure
