@@ -9,6 +9,7 @@ resources:
   - name: master-branch
     type: git
     webhook_token: V21T8e3dLyFWT434NwjL
+    check_every: 6h
     source:
       branch: master
       uri: git@github.com:MalpenZibo/rps.git
@@ -16,6 +17,7 @@ resources:
   - name: pr-branch
     type: pull-request
     webhook_token: V21T8e3dLyFWT434NwjL
+    check_every: 6h
     source:
       repository: MalpenZibo/rps
       access_token: ((github-token))
@@ -63,13 +65,18 @@ jobs:
           status: pending
       - task: sbt-test
         config: *test-config
-        on_success:
-          <<: *up-settings
-          params:
-            <<: *default-up-params
-            status: success
-        on_failure:
-          <<: *up-settings
-          params:
-            <<: *default-up-params
-            status: failure
+    on_success:
+      <<: *up-settings
+      params:
+        <<: *default-up-params
+        status: success
+    on_failure:
+      <<: *up-settings
+      params:
+        <<: *default-up-params
+        status: failure
+    on_error:
+      <<: *up-settings
+      params:
+        <<: *default-up-params
+        status: error
