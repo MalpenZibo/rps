@@ -60,11 +60,11 @@ class GameControllerSuite
     val moveGenerator = new StaticMoveGenerator(Move.Rock)
     val gameService = new GameServiceImpl(gameRepository, moveGenerator)
 
-    it("should return 404 when trying to get a game before have played a move") {
+    /*it("should return 404 when trying to get a game before have played a move") {
       Get("/rps/result") ~> route ~> check {
         status should be (StatusCodes.NotFound)
       }
-    }
+    }*/
 
     it("should return 200 when post a move") {
       case class Request(userMove: Move)
