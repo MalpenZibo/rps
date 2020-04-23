@@ -64,7 +64,8 @@ jobs:
           path: root
           status: pending
       - task: sbt-test
-        config: *test-config
+        config:
+          <<: *test-config
     on_success:
       <<: *up-settings
       params:
