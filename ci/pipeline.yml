@@ -1,21 +1,37 @@
 ---
+resource_types:
+  - name: pull-request
+    type: docker-image
+    source:
+      repository: teliaoss/github-pr-resource
+
 resources:
   - name: master-branch
     type: git
+    webhook_token: V21T8e3dLyFWT434NwjL
+    check_every: 6h
     source:
       branch: master
       uri: git@github.com:MalpenZibo/rps.git
       private_key: ((repo-key))
+  - name: pr-branch
+    type: pull-request
+    webhook_token: V21T8e3dLyFWT434NwjL
+    check_every: 6h
+    source:
+      repository: MalpenZibo/rps
+      access_token: ((github-token))
 
 jobs:
-  - name: test
+  - name: main-test
     plan:
-      - get: master-branch
+      - get: root
+        resource: master-branch
         params:
           depth: 1
         trigger: true
       - task: sbt-test
-        config:
+        config: &test-config
           platform: linux
           image_resource:
             type: docker-image
@@ -23,15 +39,45 @@ jobs:
               repository: buildo/scala-sbt-alpine
               tag: 8u201_2.12.10_1.3.7
           inputs:
-            - name: master-branch
+            - name: root
           caches:
             - path: .sbt
             - path: .ivy2
           run:
-            dir: master-branch
+            dir: root
             path: sbt
             args:
               - -Dsbt.ivy.home=../.ivy2
               - -Dsbt.global.base=../.sbt/1.0
               - -Dsbt.boot.directory=../.sbt/boot
               - test
+  - name: pr-test
+    plan:
+      - get: root
+        resource: pr-branch
+        trigger: true
+        version: every
+      - &up-settings
+        put: update-status
+        resource: pr-branch
+        params: &default-up-params
+          path: root
+          status: pending
+      - task: sbt-test
+        config:
+          <<: *test-config
+    on_success:
+      <<: *up-settings
+      params:
+        <<: *default-up-params
+        status: success
+    on_failure:
+      <<: *up-settings
+      params:
+        <<: *default-up-params
+        status: failure
+    on_error:
+      <<: *up-settings
+      params:
+        <<: *default-up-params
+        status: error
