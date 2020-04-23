@@ -8,12 +8,14 @@ resource_types:
 resources:
   - name: master-branch
     type: git
+    webhook_token: V21T8e3dLyFWT434NwjL
     source:
       branch: master
       uri: git@github.com:MalpenZibo/rps.git
       private_key: ((repo-key))
   - name: pr-branch
     type: pull-request
+    webhook_token: V21T8e3dLyFWT434NwjL
     source:
       repository: MalpenZibo/rps
       access_token: ((github-token))
