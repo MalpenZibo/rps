@@ -20,11 +20,6 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-provider "aws" {
-  profile = "buildo"
-  region  = "eu-central-1"
-}
-
 resource "aws_key_pair" "access" {
   key_name   = "access-key"
   public_key = "${var.access_key_value}"
