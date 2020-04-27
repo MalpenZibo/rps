@@ -2,6 +2,8 @@ module "dockercomposehost" {
   source  = "buildo/dockercomposehost/aws"
   version = "1.4.1"
 
+  instance_type = "t3a.nano"
+
   zone_id      = "${data.aws_route53_zone.simonerps-our-buildo-io.zone_id}"
   ssh_key_name = "aws-simonerps"
 
@@ -26,7 +28,7 @@ variable ssh_private_key {
 
 resource "aws_key_pair" "access" {
   key_name   = "access-key"
-  public_key = "${file("rps.pub")}"
+  public_key = "${file("config/rps.pub")}"
 }
 
 locals {
