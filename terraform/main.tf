@@ -11,6 +11,7 @@ module "dockercomposehost" {
   host_name           = "simonerps.our.buildo.io"
   ssh_private_key     = "${var.ssh_private_key}"
   quay_password       = "${var.quay_password}"
+  init_script         = "${file("init.sh")}"
   in_open_ports       = ["80"]
   in_cidr_blocks      = ["${local.buildo_ip}"]
   bellosguardo_target = "buildo"
