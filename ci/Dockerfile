@@ -13,6 +13,6 @@ FROM openjdk:8-jre-alpine
 
 EXPOSE 8080 
 
-COPY --from=build /srv/api/target/scala-2.12/api.jar /srv/api.jar
+COPY --from=build /srv/api/target/scala-2.12/rps.jar /srv/api.jar
 
 CMD /usr/bin/java -cp /srv/api.jar rps.Main

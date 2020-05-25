@@ -22,6 +22,11 @@ inThisBuild(
     scalacOptions ++= Seq(
       "-Yrangepos",          // required by SemanticDB compiler plugin
       "-Ywarn-unused-import" // required by `RemoveUnused` rule
-    )
+    ),
   )
 )
+
+lazy val myProject = (project in file(".")).
+  settings(
+    assemblyJarName in assembly := "rps.jar",
+  )
