@@ -1,8 +1,7 @@
-ThisBuild / scalaVersion     := "2.12.10"
-
-lazy val root = (project in file("."))
-  .settings(
+inThisBuild(
+  List(
     name := "rps",
+    scalaVersion := "2.12.10",
     resolvers += "buildo at bintray" at "https://dl.bintray.com/buildo/maven",
     libraryDependencies ++= Seq(
       "io.buildo" %% "enumero" % "1.2.1",
@@ -23,5 +22,11 @@ lazy val root = (project in file("."))
     scalacOptions ++= Seq(
       "-Yrangepos",          // required by SemanticDB compiler plugin
       "-Ywarn-unused-import" // required by `RemoveUnused` rule
-    )
+    ),
+  )
+)
+
+lazy val myProject = (project in file(".")).
+  settings(
+    assemblyJarName in assembly := "rps.jar",
   )

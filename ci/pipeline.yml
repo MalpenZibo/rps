@@ -21,6 +21,13 @@ resources:
     source:
       repository: MalpenZibo/rps
       access_token: ((github-token))
+  - name: docker-build
+    type: docker-image
+    icon: docker
+    source:
+      repository: quay.io/buildo/simone-rps
+      username: ((quay-username))
+      password: ((quay-password))
 
 jobs:
   - name: main-test
@@ -81,3 +88,43 @@ jobs:
       params:
         <<: *default-up-params
         status: error
+  - name: build
+    plan:
+      - get: root
+        resource: master-branch
+        params:
+          depth: 1
+        trigger: true
+      - put: docker-build
+        params:
+          build: root
+          dockerfile: root/ci/Dockerfile
+        get_params:
+          save: true
+  - name: deploy
+    plan:
+      - get: root
+        resource: master-branch
+        params:
+          depth: 1
+        trigger: true
+      - task: deploy-task
+        params:
+          PRIVATE_KEY: ((private-key))
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: kroniak/ssh-client
+          inputs:
+            - name: root
+          run:
+            path: bash
+            args:
+              - -c
+              - |
+                mkdir ~/.ssh
+                echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+                chmod 400 ~/.ssh/id_rsa
+                root/ci/deploy.sh ~/.ssh/id_rsa quay.io ((quay-username)) ((quay-password))

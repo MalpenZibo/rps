@@ -32,7 +32,7 @@ object Main extends App with RouterDerivationModule {
     val gameRouter = deriveRouter[GameController](gameController)
   
     val rpcServer = new HttpRPCServer(
-      config = Config("localhost", 8080),
+      config = Config("0.0.0.0", 8080),
       routers = List(gameRouter)
     )
   })
